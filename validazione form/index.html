@@ -1,0 +1,103 @@
+<html>
+<head>
+  <style>
+    /*colorazione del testo di rosso per bellezza*/
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <form id="myForm">
+    <label for="name">Name: </label>
+    <input type="text" id="name" name="name" onchange="validazioneNome()"> <!--form con input del nome + function per la validazione del nome-->
+    <span class="error" id="nameError"></span><br>
+
+    <label for="email">Email: </label>
+    <input type="text" id="email" name="email" onchange="validazioneEmail()"> <!--stessa cosa di sopra però con l'email-->
+    <span class="error" id="emailError"></span><br>
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <script>
+    var noErrors = true; //serve come flag per lasciar passare i dati nei form 
+    // function per la validazione del nome 
+    function validazioneNome() {
+      
+      //variabili
+      var name = document.getElementById("name");
+      var nameError = document.getElementById("nameError");
+      var valid = false;
+
+      //se il valore continene almeno un carattere 
+      if (name.value.length > 0) {
+        valid = true;
+      } else {
+        nameError.textContent = "Nome richiesto.";
+        noErrors = false; //impostazione del flag a false così il dato del form npon possa essere validato
+      }
+
+      // la validazione del nome in modo che sia costituita solo da lettere e lunga almeno di 2
+      //lascio il fatto che si possa mettere lo spazio nel nome
+      if (name.value.match(/^[a-zA-Z][a-zA-Z\s]*$/) && name.value.length >= 2) {
+        valid = true;
+        nameError.textContent = "";
+      } else {
+        nameError.textContent = "Il nome deve essere costituito solo da lettere e deve essere lunga almeno di 2 lettere";
+        noErrors = false;
+      }
+
+      //validazione
+      if (valid) {
+        name.classList.remove("error");
+      } else {
+        name.classList.add("error");
+      }
+    }
+
+    function validazioneEmail() {
+      var email = document.getElementById("email");
+      var emailError = document.getElementById("emailError");
+      var valid = false;
+
+      if (email.value.length > 0) {
+        valid = true;
+      } else {
+        emailError.textContent = "Email richiesta.";
+        noErrors = false;
+      }
+
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (re.test(email.value)) {
+        valid = true;
+        emailError.textContent = "";
+      } else {
+        emailError.textContent = "Email non corretta.";
+        noErrors = false;
+      }
+
+      //validazione
+      if (valid) {
+        email.classList.remove("error");
+      } else {
+        email.classList.add("error");
+      }
+    }
+
+    const form = document.getElementById("myForm");
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      noErrors = true;
+      //verifica 
+      validazioneNome();
+      validazioneEmail();
+
+      //validazione di entrambi i form che aderiscono entrambi a tutte le regole
+      if (noErrors) {
+        form.submit();
+      }
+    });
+  </script>
+</body>
+</html>
